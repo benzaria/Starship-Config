@@ -1,0 +1,43 @@
+{
+  "name": "starship-config",
+  "version": "1.0.0",
+  "description": "make ur Starship config in multiple files in `json`, `yaml` and `toml`",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "watch": "node index.js -w",
+    "start:silent": "node index.js -s",
+    "watch:silent": "node index.js -w -s"
+  },
+  "devDependencies": {
+    "@iarna/toml": "^2.2.5",
+    "yaml": "^2.7.0"
+  },
+  "keywords": [
+    "starship",
+    "config",
+    "shell",
+    "powershell",
+    "zshell",
+    "zsh",
+    "bash",
+    "yaml",
+    "yml",
+    "jsonc",
+    "json",
+    "toml"
+  ],
+  "maintainers": [
+    {
+      "name": "benzaria",
+      "email": "benz.github@gmail.com"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benzaria/Starship-Config"
+  },
+  "author": "benzaria",
+  "license": "MIT"
+}
