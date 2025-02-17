@@ -7,10 +7,12 @@
   "scripts": {
     "start": "node index.js",
     "watch": "node index.js -w",
-    "start:silent": "node index.js -s",
-    "watch:silent": "node index.js -w -s"
+    "start:log": "node index.js -l",
+    "watch:log": "node index.js -wl",
+    "start:no-err": "node index.js --no-err",
+    "watch:no-err": "node index.js --no-err"
   },
-  "devDependencies": {
+  "dependencies": {
     "@iarna/toml": "^2.2.5",
     "yaml": "^2.7.0"
   },
