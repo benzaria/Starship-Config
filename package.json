@@ -39,8 +39,13 @@
       "email": "benz.github@gmail.com"
     }
   ],
+  "publishConfig": {
+    "access": "public",
+    "tag": "latest"
+  },
   "repository": {
     "type": "git",
+    "directory": "mucho",
     "url": "git+https://github.com/benzaria/any-config"
   },
   "author": "benzaria",
