@@ -1,14 +1,14 @@
 {
-  "name": "starship-config",
-  "version": "1.0.0",
-  "description": "make ur Starship config in multiple files in `json`, `yaml` and `toml`",
+  "name": "any-config",
+  "version": "1.0.3",
+  "description": "Make ur `Config` in **multiple file** with `json`, `yaml`, `toml` and *More* **All at Once** and **Hot Reload** on **Change**",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "start": "node index.js",
     "watch": "node index.js -w",
-    "start:log": "node index.js -l",
-    "watch:log": "node index.js -wl",
+    "start:verbose": "node index.js -l",
+    "watch:verbose": "node index.js -wl",
     "start:no-err": "node index.js --no-err",
     "watch:no-err": "node index.js --no-err"
   },
@@ -18,6 +18,9 @@
   },
   "keywords": [
     "starship",
+    "spaceship",
+    "oh-mu-posh",
+    "oh-mu-zsh",
     "config",
     "shell",
     "powershell",
@@ -38,7 +41,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/benzaria/Starship-Config"
+    "url": "git+https://github.com/benzaria/any-config"
   },
   "author": "benzaria",
   "license": "MIT"
