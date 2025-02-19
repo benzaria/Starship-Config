@@ -57,9 +57,8 @@ To add support for a new format, import the corresponding library and add it to 
 > so it will load first and not mess up the configuration output.
 
 ```bash
-config-any --file ./starship.toml --watch
+config-any --file $STARSHIP_CONFIG --watch # for starship config
 ```
-
 
 `config/.main.toml`
 ```toml
