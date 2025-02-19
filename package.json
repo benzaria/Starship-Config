@@ -7,8 +7,8 @@
   "scripts": {
     "start": "node index.js",
     "watch": "node index.js -w",
-    "start:verbose": "node index.js -l",
-    "watch:verbose": "node index.js -wl",
+    "start:verbose": "node index.js -v",
+    "watch:verbose": "node index.js -wv",
     "start:no-err": "node index.js --no-err",
     "watch:no-err": "node index.js --no-err"
   },
@@ -19,8 +19,8 @@
   "keywords": [
     "starship",
     "spaceship",
-    "oh-mu-posh",
-    "oh-mu-zsh",
+    "oh-my-posh",
+    "oh-my-zsh",
     "config",
     "shell",
     "powershell",
@@ -45,7 +45,7 @@
   "repository": {
     "type": "git",
     "directory": "mucho",
-    "url": "git+https://github.com/benzaria/any-config"
+    "url": "git+https://github.com/benzaria/config.any"
   },
   "author": "benzaria",
   "license": "MIT"

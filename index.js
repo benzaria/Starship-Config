@@ -1,6 +1,6 @@
 //@ts-check
 import { readdirSync, lstatSync, readFileSync, writeFileSync, unlinkSync, existsSync, watch } from 'fs'
-import { resolve, extname } from 'path'
+import { resolve, extname, basename } from 'path'
 import { parseArgs } from 'util'
 import { tmpdir } from 'os'
 
@@ -41,14 +41,10 @@ const Converter = new Proxy(
 
 const __dirname = import.meta.dirname
 const __filename = import.meta.filename
-//? or replace with a local version
-const $schema = 'https://starship.rs/config-schema.json'
-//? or overwrite it with the flag: --lock, -l <lock-name>
-var LOCK_FILE = 'Starship-Config.lock'
 
-//? or export them as env_vars
-var outputFile = resolve(process.env.CONFIG_FILE ?? resolve(__dirname, '../starship.toml'))
-var watchDir = resolve(process.env.CONFIG_DIR ?? resolve(__dirname, '../config'))
+var outputFile = resolve(__dirname, '../config.json')
+var watchDir = resolve(__dirname, '../config')
+var lockFile = () => resolve(tmpdir(), `${basename(outputFile)}.lock`)
 
 var info = (/**@type {string[]}*/...data) => console.log('[\x1b[1;94mINFO\x1b[0m]', ...data)
 var warn = (/**@type {string[]}*/...data) => console.log('[\x1b[1;93mWARN\x1b[0m]', ...data)
@@ -62,18 +58,13 @@ info('Outfile is', outputFile)
 info(`Watching for changes in ${watchDir}...`)
 
 async function updateOutput() {
-    const content = { $schema }
+    const content = {}
     const files = readdirSync(watchDir)
 
     for (const file of files) {
         const filePath = resolve(watchDir, file)
-        if (lstatSync(filePath).isFile()) {
-            try {
-                Object.assign(content, await importObj(filePath))
-            } catch (err) {
-                error(`Processing ${file}:`, err.message)
-            }
-        }
+        if (lstatSync(filePath).isFile())
+            Object.assign(content, await importObj(filePath))
     }
     const extOut = extname(outputFile).toLowerCase().slice(1)
     writeFileSync(outputFile, Converter[extOut].stringify(content), 'utf8')
@@ -88,7 +79,7 @@ async function importObj(/**@type string*/file) {
         delete obj.$schema
         return obj
     } catch (err) {
-        return error(`Converting ${file}:`, err.message), ''
+        return error(`Processing ${file}:`, err.message), {}
     }
 }
 
@@ -131,17 +122,18 @@ function argParse() {
         allowNegative: true,
     })
     global.__awaiter = true
-    if (!args.verbose) info = NUN, warn = NUN
-    if (!args.err) error = NUN
-    if (args.file && typeof args.file !== 'boolean') outputFile = resolve(args.file) || args.file
-    if (args.dir && typeof args.dir !== 'boolean') watchDir = resolve(args.dir) || args.dir
-    if (args.lock && typeof args.lock !== 'boolean') LOCK_FILE = resolve(tmpdir(), args.lock) || args.lock
+    if (!args.verbose) info = _void, warn = _void
+    if (!args.err) error = _void
+    if (args.file && typeof args.file !== 'boolean') outputFile = resolve(args.file)
+    if (args.dir && typeof args.dir !== 'boolean') watchDir = resolve(args.dir)
+    if (args.lock && typeof args.lock !== 'boolean') lockFile = () => resolve(`${args.lock}.lock`)
     if (args.watch)
         watch(watchDir, { persistent: true }, (evt, file) => {
             if (global.__awaiter) {
                 global.__awaiter = false
                 setTimeout(() => {
                     global.__awaiter = true
+                    process.stdout.write('\x1b[1E')
                     info(`Updating changes from ${file}...`)
                     updateOutput()
                 }, 500)
@@ -152,7 +144,7 @@ function argParse() {
 }
 
 //* Process Locking to prevent multiple instances
-function createLock(lock = LOCK_FILE) {
+function createLock(lock = lockFile()) {
     if (existsSync(lock)) {
         try {
             const pid = readFileSync(lock, 'utf8')
@@ -167,13 +159,14 @@ function createLock(lock = LOCK_FILE) {
     info('Lock file created at', lock)
 
     process.on('exit', () => removeLock(lock))
-    process.on('SIGINT', () => { removeLock(lock) })
+    process.on('SIGINT', () => { removeLock(lock, true) })
     process.on('SIGTERM', () => { removeLock(lock) })
 }
 
-function removeLock(lock = LOCK_FILE) {
-    if (existsSync(LOCK_FILE)) unlinkSync(LOCK_FILE)
+function removeLock(lock = lockFile(), log = false) {
+    if (existsSync(lock)) unlinkSync(lock)
+    if (log) info('An other process started! Exiting...')
     process.exit()
 }
 
-function NUN() { } //! No-Op Function
+function _void() { } //! No-Op Function

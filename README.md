@@ -1,15 +1,67 @@
 
-# Startship-Config
+# Config-Any
 
- Make ur Startship `Config` in **multiple file** with `json`, `yaml` and `toml` **All at Once** and **Hot Reload** on **Change**.
+ Make ur `Config` in **multiple files** with `json`, `yaml`, `toml` and *More...* **All at Once** and **Hot Reload** on **Change**.
+
+## Shell Integration
+
+bash/zsh
+
+```bash
+echo "path-to/config-any [options] &" >> ~/.bashrc # or ~/.zshrc
+```
+
+pwsh
+
+```powershell
+echo "Start-Process -NoNewWindow path-to/config-any -ArgumentList '[options]'" >> $PROFILE
+```
+
+cmd - ('if u have a profile script')
+
+```batch
+echo "@start /b path-to/config-any [options]" >> %USERPROFILE%/.batchrc
+```
+
+## API
+Usage:
+
+```bash
+config-any --file ./mainFile.{json,yaml,...} --dir ./config --watch
+```
+
+Options:
+- `--file, -f <path>`: Specify the output file path (default: ./config.json)
+- `--dir, -d <path>`: Specify the directory to watch for config files (default: ./config)
+- `--lock, -l <path>`: Specify a custom lock file name (default: tempDir/{outFileName}.lock)
+- `--watch, -w`: Enable hot reloading on file changes
+- `--verbose, -v`: Enable verbose logging
+- `--err, -e`: Enable error logging (default: true)
+
+Supported Formats:
+- JSON
+- JSONC (JSON with comments)
+- YAML
+- TOML
+
+To add support for a new format, import the corresponding library and add it to the `Converter` object in index.js.
+
+## Requirements
+
+- [Node v20+](https://nodejs.org/en/download/current)
 
 ## Example
 
 > [!IMPORTANT]
 > make sure to start the file name that containe the global props with a ` . ` like `.main.toml`,
-> so it will load first and note mess up the configuration.
+> so it will load first and not mess up the configuration output.
 
-`.main.toml`
+```bash
+config-any --file ./starship.toml --watch
+```
+
+
+`config/.main.toml`
 ```toml
 "$schema" = 'https://starship.rs/config-schema.json'
 
@@ -25,7 +77,7 @@ continuation_prompt = "[|](bright-black) "
 fill = { symbol = " " }
 ```
 
-`file-1.json`
+`config/file-1.json`
 ```json
 {
     "$schema" : "https://starship.rs/config-schema.json",
@@ -47,7 +99,7 @@ fill = { symbol = " " }
 }
 ```
 
-`file-2.yml`
+`config/file-2.yml`
 ```yaml
 # yaml-language-server: $schema=../schema.json
 
