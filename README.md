@@ -37,6 +37,7 @@ Options:
 - `--watch, -w`: Enable hot reloading on file changes
 - `--verbose, -v`: Enable verbose logging
 - `--err, -e`: Enable error logging (default: true)
+- `--no-{option}`: Disable any of the boolen options
 
 Supported Formats:
 - JSON
